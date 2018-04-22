@@ -2,6 +2,11 @@ package factory.module;
 
 import java.util.Map;
 
+/**
+ * 范型问题，不知道为什么  kind.isInstance(createNew(typeName))验证不通过
+ * @param <T>
+ */
+
 public class ClassTypeCapture<T> {
 
     private Class<T> kind;
