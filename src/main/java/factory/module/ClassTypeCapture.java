@@ -11,7 +11,7 @@ public class ClassTypeCapture<T> {
 
     private Class<T> kind;
 
-    private Map<String,Class<T>> map;
+    private Map<String,Class<?>> map;
 
     public void addType(String typeName,Class<T> kind){
 
@@ -20,15 +20,16 @@ public class ClassTypeCapture<T> {
         //这儿为什么过不去呢。
         System.out.println("kind is class "+kind.getName());//factory.module.Builder
         System.out.println("object is class "+createNew(typeName));//class factory.modual.Builder
-        System.out.println(kind.isInstance(createNew(typeName).getClass().getName()));
-        if (kind.isInstance(createNew(typeName))){
+//        System.out.println(kind.isInstance(createNew(typeName)));
+        Object o = createNew(typeName);
+        if (kind.isInstance(o)){
             map.put(typeName,kind);
         }
 
     }
 
     public void getMap(){
-        for (Map.Entry<String,Class<T>> entry:map.entrySet()){
+        for (Map.Entry<String,Class<?>> entry:map.entrySet()){
             System.out.println("key:"+entry.getKey()+"--value:"+entry.getValue());
         }
     }
@@ -36,8 +37,12 @@ public class ClassTypeCapture<T> {
     private Object createNew(String typeName){
         Object object = null;
         try {
-            object = Class.forName(typeName);
+            object = Class.forName(typeName).newInstance();
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
             e.printStackTrace();
         }
         return object;
@@ -71,7 +76,17 @@ public class ClassTypeCapture<T> {
 }
 
 
-class Builder{};
+class Builder{
+    void init(){
+        System.out.println("the builder init");
+
+    }
+};
 
 
-class House extends Builder{};
+class House extends Builder{
+    void init(){
+        System.out.println("the house init");
+
+    }
+};
